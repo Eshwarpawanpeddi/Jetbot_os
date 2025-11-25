@@ -3,6 +3,12 @@
 Controller Module - Handle manual controller input for robot movement
 Supports various game controllers (PS4, Xbox, Generic)
 """
+import sys
+import os
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from modules.event_bus import event_bus, EventType
 
 import time
 import logging

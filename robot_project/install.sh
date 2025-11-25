@@ -81,3 +81,10 @@ echo "  sudo systemctl enable jetbot"
 echo ""
 echo "To disable autostart:"
 echo "  sudo systemctl disable jetbot"
+
+# Create media directories
+echo "Creating media directories..."
+mkdir -p /opt/jetbot/media/photos
+mkdir -p /opt/jetbot/media/videos
+chown -R $USER:$GROUP /opt/jetbot/media
+

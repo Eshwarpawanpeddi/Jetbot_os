@@ -2,13 +2,17 @@
 """
 LLM Module - Handles conversational AI and multi-intent detection
 """
-
 import os
 import sys
 import time
 import logging
 import requests
-from event_bus import event_bus, EventType
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from modules.event_bus import event_bus, EventType
+
 
 # LLM Configuration
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")

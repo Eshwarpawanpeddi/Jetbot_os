@@ -3,6 +3,12 @@
 ROS Navigation Module - Autonomous navigation and obstacle avoidance
 NOTE: This is a stub. Full implementation requires ROS installation and configuration.
 """
+import sys
+import os
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from modules.event_bus import event_bus, EventType
 
 import time
 import logging
