@@ -1,0 +1,83 @@
+# Jetbot Launcher Configuration
+
+modules:
+  llm:
+    enabled: true
+    script_path: "modules/llm_module.py"
+    max_retries: 5
+    retry_delay: 10
+    critical: false
+    description: "LLM API integration for conversational AI"
+  
+  face:
+    enabled: true
+    script_path: "modules/face_module.py"
+    max_retries: 3
+    retry_delay: 5
+    critical: false
+    description: "Animated face display with emotions"
+  
+  voice:
+    enabled: true
+    script_path: "modules/voice_module.py"
+    max_retries: 5
+    retry_delay: 10
+    critical: false
+    description: "TTS, STT, and emotion detection"
+  
+  camera:
+    enabled: true
+    script_path: "modules/camera_module.py"
+    max_retries: 3
+    retry_delay: 5
+    critical: false
+    description: "Camera livestream and video recording"
+  
+  controller:
+    enabled: true
+    script_path: "modules/controller_module.py"
+    max_retries: 5
+    retry_delay: 5
+    critical: false
+    description: "Manual controller input handling"
+  
+  ros_nav:
+    enabled: false  # Set to true when ROS is configured
+    script_path: "modules/ros_navigation.py"
+    max_retries: 3
+    retry_delay: 15
+    critical: false
+    description: "ROS navigation stack for autonomous mode"
+
+# LLM Configuration
+llm:
+  api_key: "${LLM_API_KEY}"  # Set via environment variable
+  api_url: "https://api.openai.com/v1/chat/completions"
+  model: "gpt-3.5-turbo"
+
+# Camera Configuration
+camera:
+  device_id: 0  # CSI camera
+  width: 1280
+  height: 720
+  fps: 30
+  photo_dir: "/opt/jetbot/media/photos"
+  video_dir: "/opt/jetbot/media/videos"
+
+# Face Display Configuration
+display:
+  width: 800
+  height: 480
+  default_emotion: "neutral"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  directory: "/var/log/jetbot"
+  max_file_size_mb: 50
+  backup_count: 5
+
+# System settings
+system:
+  mode: "auto"  # auto or manual
+  startup_delay: 5  # seconds to wait before starting modules
