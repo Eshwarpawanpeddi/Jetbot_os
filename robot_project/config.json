@@ -1,0 +1,25 @@
+{
+    "system": {
+        "tick_rate": 30,
+        "mode_default": "MANUAL",
+        "debug": true
+    },
+    "llm": {
+        "provider": "openai",
+        "api_key": "YOUR_API_KEY_HERE",
+        "model": "gpt-4-turbo",
+        "system_prompt": "You are a helpful pet robot. You have emotions. Keep responses short and expressive."
+    },
+    "network": {
+        "api_port": 8000,
+        "stream_port": 8080
+    },
+    "hardware": {
+        "screen_width": 800,
+        "screen_height": 480,
+        "camera_index": 0
+    },
+    "ros": {
+        "launch_command": "roslaunch jetbot_ros navigation.launch"
+    }
+}
