@@ -42,22 +42,38 @@ modules:
     description: "Manual controller input handling"
   
   ros_nav:
-    enabled: false  # Set to true when ROS is configured
+    enabled: true
     script_path: "modules/ros_navigation.py"
     max_retries: 3
     retry_delay: 15
     critical: false
     description: "ROS navigation stack for autonomous mode"
+  
+  api:
+    enabled: true
+    script_path: "api/api_module.py"
+    max_retries: 3
+    retry_delay: 10
+    critical: false
+    description: "API servers for Android app integration"
+  
+  battery:
+    enabled: true
+    script_path: "modules/battery_module.py"
+    max_retries: 5
+    retry_delay: 10
+    critical: false
+    description: "Battery monitoring and low power management"
 
 # LLM Configuration
 llm:
-  api_key: "${LLM_API_KEY}"  # Set via environment variable
+  api_key: "${LLM_API_KEY}"
   api_url: "https://api.openai.com/v1/chat/completions"
   model: "gpt-3.5-turbo"
 
 # Camera Configuration
 camera:
-  device_id: 0  # CSI camera
+  device_id: 0
   width: 1280
   height: 720
   fps: 30
@@ -70,6 +86,21 @@ display:
   height: 480
   default_emotion: "neutral"
 
+# Navigation Configuration
+navigation:
+  auto_start: false
+  default_mode: "auto"
+  max_linear_speed: 0.5
+  max_angular_speed: 1.0
+  min_obstacle_distance: 0.5
+  emergency_stop_distance: 0.2
+
+# Battery Configuration
+battery:
+  low_battery_threshold: 20
+  critical_battery_threshold: 10
+  check_interval: 30
+
 # Logging configuration
 logging:
   level: "INFO"
@@ -79,21 +110,5 @@ logging:
 
 # System settings
 system:
-  mode: "auto"  # auto or manual
-  startup_delay: 5  # seconds to wait before starting modules
-
-api:
-    enabled: true
-    script_path: "api/api_module.py"
-    max_retries: 3
-    retry_delay: 10
-    critical: false
-    description: "API servers for Android app integration"
-
-ros_nav:
-    enabled: true
-    script_path: "modules/ros_navigation.py"
-    max_retries: 3
-    retry_delay: 15
-    critical: false
-    description: "ROS navigation stack for autonomous mode"
+  mode: "auto"
+  startup_delay: 5
