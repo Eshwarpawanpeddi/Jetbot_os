@@ -89,3 +89,11 @@ api:
     retry_delay: 10
     critical: false
     description: "API servers for Android app integration"
+
+ros_nav:
+    enabled: true
+    script_path: "modules/ros_navigation.py"
+    max_retries: 3
+    retry_delay: 15
+    critical: false
+    description: "ROS navigation stack for autonomous mode"
