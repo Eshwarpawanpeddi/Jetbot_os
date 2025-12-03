@@ -25,6 +25,15 @@ modules:
     critical: false
     description: "TTS, STT, and emotion detection"
   
+  # NEW MODULE HERE
+  vision_emotion:
+    enabled: true
+    script_path: "modules/vision_emotion_module.py"
+    max_retries: 3
+    retry_delay: 5
+    critical: false
+    description: "Visual emotion recognition"
+  
   camera:
     enabled: true
     script_path: "modules/camera_module.py"
