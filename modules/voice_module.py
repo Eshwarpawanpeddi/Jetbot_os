@@ -27,7 +27,7 @@ class VoiceModule:
         # Check system audio dependencies
         if sys.platform == "linux":
             if not (shutil.which("espeak") or shutil.which("espeak-ng")):
-                logging.error("CRITICAL: 'espeak' not found. sudo apt-get install espeak")
+                logging.error("CRITICAL: 'espeak' not found. Please run: sudo apt-get install espeak")
                 self.tts_enabled = False
 
         if self.tts_enabled:
