@@ -1,107 +1,98 @@
 #!/bin/bash
 #==============================================================================
-# COMPLETE JETBOT OS DEPLOYMENT
-# One command to deploy everything on Jetson Nano
+# JETBOT OS - COMPLETE DEPLOYMENT SCRIPT
+# Installs dependencies, cleans old files, and sets up the service.
 #==============================================================================
 
 set -e
 
 GREEN='\033[0;32m'
-CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-print_header() {
-    echo -e "\n${CYAN}=== $1 ===${NC}\n"
-}
-
-print_success() { echo -e "${GREEN}✓${NC} $1"; }
-print_error() { echo -e "${RED}✗${NC} $1"; }
-print_info() { echo -e "${CYAN}ℹ${NC} $1"; }
-
 INSTALL_DIR="/opt/jetbot"
+USER_NAME=${SUDO_USER:-$USER}
 
-print_header "JETBOT OS COMPLETE DEPLOYMENT"
+echo -e "${GREEN}=== STARTING JETBOT OS DEPLOYMENT ===${NC}"
 
-# Check if running on Jetson
-if [ -f /etc/nv_tegra_release ]; then
-    print_success "Running on Jetson Nano"
-    IS_JETSON=true
-else
-    print_info "Not running on Jetson - Development mode"
-    IS_JETSON=false
+# 1. PRE-FLIGHT CHECKS
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "${RED}Please run as root (use sudo).${NC}"
+    exit 1
 fi
 
-# Install system dependencies
-print_header "Installing System Dependencies"
-sudo apt-get update
-sudo apt-get install -y python3-pip python3-dev git curl
+# 2. SYSTEM DEPENDENCIES
+echo -e "\n${YELLOW}[1/5] Installing System Libraries...${NC}"
+apt-get update
+# Install audio, redis, and build tools
+apt-get install -y python3-pip python3-dev git curl redis-server \
+    portaudio19-dev libespeak1 python3-pyaudio
 
-# Install Python dependencies
-print_header "Installing Python Dependencies"
-pip3 install --upgrade pip
+# 3. PYTHON DEPENDENCIES
+echo -e "\n${YELLOW}[2/5] Installing Python Libraries...${NC}"
+# Create requirements if missing
+if [ ! -f requirements.txt ]; then
+    echo "Creating default requirements.txt..."
+    cat > requirements.txt << EOL
+pyyaml
+requests
+redis
+flask
+flask-cors
+fastapi
+uvicorn
+websockets
+openai
+SpeechRecognition
+pyttsx3
+pygame
+EOL
+fi
 pip3 install -r requirements.txt
 
-# Create directories
-print_header "Creating Directories"
-sudo mkdir -p $INSTALL_DIR
-sudo mkdir -p $INSTALL_DIR/media/photos
-sudo mkdir -p $INSTALL_DIR/media/videos
-sudo mkdir -p /var/log/jetbot
+# 4. FILE DEPLOYMENT
+echo -e "\n${YELLOW}[3/5] Deploying Files to $INSTALL_DIR...${NC}"
+mkdir -p $INSTALL_DIR
+mkdir -p $INSTALL_DIR/config
+mkdir -p $INSTALL_DIR/modules
+mkdir -p $INSTALL_DIR/api
+mkdir -p $INSTALL_DIR/data
+mkdir -p $INSTALL_DIR/media/photos
+mkdir -p $INSTALL_DIR/media/videos
+mkdir -p /var/log/jetbot
 
-# Copy files
-print_header "Copying Files"
-sudo cp -r . $INSTALL_DIR/
-sudo chown -R $USER:$USER $INSTALL_DIR
-sudo chown -R $USER:$USER /var/log/jetbot
+# Copy files (Assume we are running from the source folder)
+cp -r . $INSTALL_DIR/
 
-# Make scripts executable
+# 5. CLEANUP OLD CONFLICTS (Crucial Step)
+echo -e "\n${YELLOW}[4/5] Cleaning up old conflicting files...${NC}"
+rm -f $INSTALL_DIR/main_launcher.py
+rm -f $INSTALL_DIR/modules/face_display.py
+rm -f $INSTALL_DIR/modules/llm_voice.py
+rm -f $INSTALL_DIR/modules/navigation.py
+rm -f $INSTALL_DIR/modules/web_api.py
+rm -rf $INSTALL_DIR/core
+
+# Set Permissions
+chown -R $USER_NAME:$USER_NAME $INSTALL_DIR
+chown -R $USER_NAME:$USER_NAME /var/log/jetbot
 chmod +x $INSTALL_DIR/jetbot_launcher.py
 chmod +x $INSTALL_DIR/start_api_server.py
 
-# Install systemd service
-print_header "Installing Systemd Service"
-sudo cp jetbot.service /lib/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable jetbot.service
-
-print_header "DEPLOYMENT COMPLETE"
-
-IP_ADDR=$(hostname -I | awk '{print $1}')
-
-echo -e "${GREEN}"
-echo "╔════════════════════════════════════════════════════════════╗"
-echo "║              JETBOT OS READY TO USE                        ║"
-echo "╚════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
-
-echo ""
-echo -e "${CYAN}Service Control:${NC}"
-echo "  Start:   sudo systemctl start jetbot"
-echo "  Stop:    sudo systemctl stop jetbot"
-echo "  Status:  sudo systemctl status jetbot"
-echo "  Logs:    sudo journalctl -u jetbot -f"
-
-echo ""
-echo -e "${CYAN}API Endpoints:${NC}"
-echo "  REST API:       http://$IP_ADDR:5000/api"
-echo "  WebSocket:      ws://$IP_ADDR:8765"
-echo "  Camera Stream:  http://$IP_ADDR:5001/stream"
-
-echo ""
-echo -e "${CYAN}Test Commands:${NC}"
-echo "  Health check:   curl http://$IP_ADDR:5000/api/health"
-echo "  Get status:     curl http://$IP_ADDR:5000/api/status"
-
-echo ""
-read -p "Start Jetbot service now? (Y/n): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-    sudo systemctl start jetbot
-    sleep 2
-    sudo systemctl status jetbot --no-pager
+# 6. SERVICE SETUP
+echo -e "\n${YELLOW}[5/5] Configuring Systemd Service...${NC}"
+if [ -f jetbot.service ]; then
+    cp jetbot.service /lib/systemd/system/
+    systemctl daemon-reload
+    systemctl enable jetbot.service
+    echo "Service enabled."
+else
+    echo -e "${RED}Warning: jetbot.service file not found!${NC}"
 fi
 
-echo ""
-print_success "Setup complete! Jetbot OS is running."
+echo -e "\n${GREEN}=== DEPLOYMENT COMPLETE ===${NC}"
+echo "To start the robot:"
+echo "  sudo systemctl start jetbot"
+echo "To view logs:"
+echo "  tail -f /var/log/jetbot/launcher_*.log"
