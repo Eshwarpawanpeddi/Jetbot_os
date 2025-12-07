@@ -332,7 +332,7 @@ class DisplayService:
         self.running = False
         self.display_window = 'JetBot OS'
         
-        logger.info(f"Display service initialized: {server_url}")
+        logger.info(f"Display service initialized: {self.server_url}")
     
     def get_system_state(self):
         """Get current system state from server"""
@@ -360,6 +360,7 @@ class DisplayService:
         last_emotion_check = time.time()
         fps_timer = time.time()
         frame_count = 0
+        fps = 0
         
         try:
             while self.running:

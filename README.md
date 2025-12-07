@@ -325,12 +325,10 @@ Built with:
 ## 📧 Contact
 
 Questions? Reach out!
-- Email: eshwar@example.com
-- GitHub: [@eshwar](https://github.com/eshwar)
-- Twitter: [@eshwar_dev](https://twitter.com/eshwar_dev)
+- GitHub: [@Eshwarpawanpeddi](https://github.com/Eshwarpawanpeddi)
 
 ---
 
-**Last Updated**: December 7, 2024  
+**Last Updated**: December 7, 2025  
 **Version**: 1.0.0  
 **Status**: Production Ready ✅
