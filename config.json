@@ -1,25 +1,177 @@
+# ============================================================================
+# CONFIGURATION FILE - Update these values for your environment
+# ============================================================================
+# Save as: config.json (root directory)
+# ============================================================================
+
 {
-    "system": {
-        "tick_rate": 30,
-        "mode_default": "MANUAL",
-        "debug": true
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5000,
+    "debug": true,
+    "max_workers": 4,
+    "request_timeout": 30
+  },
+  
+  "jetson_nano": {
+    "host": "192.168.1.100",
+    "port": 5001,
+    "video_port": 5001,
+    "camera_index": 0,
+    "camera_width": 640,
+    "camera_height": 480,
+    "camera_fps": 30,
+    "video_quality": 80,
+    "display_width": 800,
+    "display_height": 600,
+    "display_fps": 30,
+    "reconnect_interval": 5
+  },
+  
+  "esp32": {
+    "port": "/dev/rfcomm0",
+    "baudrate": 115200,
+    "timeout": 2,
+    "heartbeat_interval": 5,
+    "motor_invert_left": false,
+    "motor_invert_right": false,
+    "max_motor_speed": 100,
+    "motor_acceleration": 10
+  },
+  
+  "bluetooth": {
+    "enabled": true,
+    "device_name": "PET_ROBOT_ESP32",
+    "mac_address": "00:00:00:00:00:00",
+    "power_class": 1,
+    "discoverable": true
+  },
+  
+  "display": {
+    "mode": "hybrid",
+    "width": 800,
+    "height": 600,
+    "fps": 30,
+    "animation_enabled": true,
+    "blink_interval": 3,
+    "emotion_transition_time": 0.5
+  },
+  
+  "face_animation": {
+    "face_color": [240, 200, 160],
+    "eye_color": [50, 50, 200],
+    "mouth_color": [0, 0, 0],
+    "face_size": 200,
+    "eye_separation": 160,
+    "mouth_height_offset": 100
+  },
+  
+  "emotions": {
+    "neutral": {
+      "mouth_type": "line",
+      "eye_openness": 1.0,
+      "brightness": 100
     },
-    "llm": {
-        "provider": "openai",
-        "api_key": "YOUR_API_KEY_HERE",
-        "model": "gpt-4-turbo",
-        "system_prompt": "You are a helpful pet robot. You have emotions. Keep responses short and expressive."
+    "happy": {
+      "mouth_type": "smile",
+      "eye_openness": 1.0,
+      "brightness": 110
     },
-    "network": {
-        "api_port": 8000,
-        "stream_port": 8080
+    "sad": {
+      "mouth_type": "frown",
+      "eye_openness": 0.8,
+      "brightness": 80
     },
-    "hardware": {
-        "screen_width": 800,
-        "screen_height": 480,
-        "camera_index": 0
+    "excited": {
+      "mouth_type": "big_smile",
+      "eye_openness": 1.2,
+      "brightness": 120
     },
-    "ros": {
-        "launch_command": "roslaunch jetbot_ros navigation.launch"
+    "confused": {
+      "mouth_type": "question",
+      "eye_openness": 0.9,
+      "brightness": 90
     }
+  },
+  
+  "mobile_app": {
+    "server_host": "192.168.1.101",
+    "server_port": 5000,
+    "reconnection_attempts": 5,
+    "reconnection_delay": 1000,
+    "voice_recording_duration": 5000,
+    "voice_quality": "high"
+  },
+  
+  "ai_processing": {
+    "emotion_detection_enabled": true,
+    "voice_to_text_enabled": true,
+    "text_to_speech_enabled": false,
+    "llm_processing_enabled": false,
+    "llm_model": "gpt-3.5-turbo",
+    "response_timeout": 10
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file": "robot_server.log",
+    "max_bytes": 10485760,
+    "backup_count": 5
+  },
+  
+  "security": {
+    "enable_authentication": false,
+    "secret_key": "change-this-in-production",
+    "cors_allowed_origins": ["*"],
+    "rate_limiting": {
+      "enabled": false,
+      "requests_per_minute": 60
+    }
+  },
+  
+  "network": {
+    "interface": "eth0",
+    "dns_servers": ["8.8.8.8", "8.8.4.4"],
+    "static_ip": false,
+    "ip_address": "192.168.1.101",
+    "netmask": "255.255.255.0",
+    "gateway": "192.168.1.1"
+  },
+  
+  "performance": {
+    "max_frame_buffer": 10,
+    "video_compression": "jpeg",
+    "enable_hardware_acceleration": true,
+    "thread_pool_size": 4,
+    "memory_limit_mb": 512
+  },
+  
+  "features": {
+    "voice_control": true,
+    "gesture_control": true,
+    "emotion_display": true,
+    "text_display": true,
+    "motor_feedback": true,
+    "audio_feedback": true,
+    "led_feedback": true,
+    "manual_mode": true,
+    "automatic_mode": true
+  },
+  
+  "safety": {
+    "motor_timeout_seconds": 5,
+    "emergency_stop_enabled": true,
+    "max_motor_acceleration": 20,
+    "min_motor_response_ms": 50,
+    "max_motor_response_ms": 500
+  },
+  
+  "calibration": {
+    "motor_left_offset": 0,
+    "motor_right_offset": 0,
+    "camera_brightness": 100,
+    "camera_contrast": 50,
+    "led_brightness": 100
+  }
 }

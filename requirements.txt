@@ -1,0 +1,77 @@
+# ============================================================================
+# Python Dependencies for AI PET ROBOT SERVER
+# ============================================================================
+# Usage: pip install -r requirements.txt
+# ============================================================================
+
+# Web Framework & Real-time Communication
+Flask==3.0.0
+Flask-CORS==4.0.0
+Flask-SocketIO==5.3.5
+python-socketio==5.10.0
+python-engineio==4.8.0
+python-dotenv==1.0.0
+
+# Computer Vision
+opencv-python==4.8.1.78
+numpy==1.24.3
+Pillow==10.0.1
+
+# Hardware Communication
+pyserial==3.5
+pybluez==0.23
+
+# Data Processing
+pandas==2.1.0
+scipy==1.11.3
+
+# Machine Learning (Optional - for AI features)
+torch==2.1.0
+torchvision==0.16.0
+tensorflow==2.14.0
+tensorflow-hub==0.14.0
+
+# Audio Processing
+librosa==0.10.0
+soundfile==0.12.1
+
+# Text Processing & NLP
+nltk==3.8.1
+spacy==3.7.2
+
+# API Integration
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+pyyaml==6.0.1
+
+# Logging & Monitoring
+python-logging-loki==0.3.2
+
+# Development
+pytest==7.4.3
+pytest-cov==4.1.0
+black==23.11.0
+flake8==6.1.0
+pylint==3.0.2
+
+# ============================================================================
+# Jetson Nano Specific
+# ============================================================================
+# For Jetson Nano, also install:
+#   sudo apt install python3-pip python3-opencv libblas-dev liblapack-dev
+#   pip3 install --upgrade pip setuptools
+#   pip3 install numpy
+
+# ============================================================================
+# Mobile App Dependencies (React Native)
+# ============================================================================
+# Install via npm in mobile_app directory:
+#   npm install socket.io-client@^4.5.0
+#   npm install expo-av@^13.0.0
+#   npm install react-native-gesture-handler@^2.10.0
+#   npm install axios@^1.5.0
+#   npm install @react-native-community/audio-toolkit@^2.0.1
