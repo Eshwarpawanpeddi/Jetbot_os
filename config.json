@@ -1,177 +1,362 @@
-# ============================================================================
-# CONFIGURATION FILE - Update these values for your environment
-# ============================================================================
-# Save as: config.json (root directory)
-# ============================================================================
-
 {
+  "system": {
+    "name": "JetBot OS",
+    "version": "2.0.0",
+    "environment": "production",
+    "robot_id": "jetbot_001"
+  },
+
   "server": {
     "host": "0.0.0.0",
     "port": 5000,
-    "debug": true,
+    "debug": false,
     "max_workers": 4,
-    "request_timeout": 30
+    "request_timeout": 30,
+    "enable_cors": true
   },
-  
+
+  "esp12e": {
+    "enabled": true,
+    "ip_address": "192.168.1.50",
+    "port": 80,
+    "timeout": 5,
+    "retry_attempts": 3,
+    "retry_delay_ms": 1000,
+    "heartbeat_interval": 10,
+    "heartbeat_enabled": true,
+    "max_speed": 255,
+    "default_speed": 200,
+    "safety_timeout_ms": 5000,
+    "motor_acceleration": 20,
+    "motor_invert_left": false,
+    "motor_invert_right": false
+  },
+
+  "motors": {
+    "enabled": true,
+    "type": "dc_motor",
+    "count": 2,
+    "max_speed": 255,
+    "min_speed": 0,
+    "default_speed": 200,
+    "ramp_up_time_ms": 200,
+    "ramp_down_time_ms": 100,
+    "safety_timeout_seconds": 5,
+    "emergency_stop_enabled": true,
+    "feedback_enabled": false,
+    "pid_control": {
+      "enabled": false,
+      "kp": 1.0,
+      "ki": 0.5,
+      "kd": 0.1
+    }
+  },
+
+  "motor_driver": {
+    "type": "L298N",
+    "gpio_left_forward": 5,
+    "gpio_left_backward": 4,
+    "gpio_right_forward": 0,
+    "gpio_right_backward": 2,
+    "pwm_frequency": 1000,
+    "power_supply_voltage": 12
+  },
+
+  "sensors": {
+    "distance_enabled": false,
+    "battery_enabled": true,
+    "temperature_enabled": false,
+    "imu_enabled": false,
+    "polling_interval_ms": 1000
+  },
+
   "jetson_nano": {
-    "host": "192.168.1.100",
-    "port": 5001,
-    "video_port": 5001,
+    "enabled": true,
+    "display_mode": "local",
     "camera_index": 0,
     "camera_width": 640,
     "camera_height": 480,
     "camera_fps": 30,
-    "video_quality": 80,
-    "display_width": 800,
-    "display_height": 600,
+    "display_width": 1280,
+    "display_height": 720,
     "display_fps": 30,
-    "reconnect_interval": 5
+    "video_codec": "H.264",
+    "video_quality": 80
   },
-  
-  "esp32": {
-    "port": "/dev/rfcomm0",
-    "baudrate": 115200,
-    "timeout": 2,
-    "heartbeat_interval": 5,
-    "motor_invert_left": false,
-    "motor_invert_right": false,
-    "max_motor_speed": 100,
-    "motor_acceleration": 10
-  },
-  
-  "bluetooth": {
-    "enabled": true,
-    "device_name": "PET_ROBOT_ESP32",
-    "mac_address": "00:00:00:00:00:00",
-    "power_class": 1,
-    "discoverable": true
-  },
-  
+
   "display": {
-    "mode": "hybrid",
-    "width": 800,
-    "height": 600,
+    "mode": "face_animation",
+    "width": 1280,
+    "height": 720,
     "fps": 30,
-    "animation_enabled": true,
+    "fullscreen": false,
+    "enable_animation": true,
+    "animation_quality": "high",
     "blink_interval": 3,
-    "emotion_transition_time": 0.5
+    "blink_duration": 0.15,
+    "emotion_transition_time": 0.5,
+    "default_emotion": "neutral",
+    "background_color": [30, 30, 40]
   },
-  
+
   "face_animation": {
+    "enabled": true,
     "face_color": [240, 200, 160],
+    "face_color_light": [255, 220, 180],
     "eye_color": [50, 50, 200],
+    "eye_shine_color": [255, 255, 255],
     "mouth_color": [0, 0, 0],
-    "face_size": 200,
-    "eye_separation": 160,
-    "mouth_height_offset": 100
+    "tear_color": [150, 200, 255],
+    "sparkle_color": [255, 255, 100],
+    "face_size": 400,
+    "eye_separation": 320,
+    "eye_size": 80,
+    "mouth_height_offset": 200,
+    "glow_enabled": true,
+    "glow_intensity": 0.3,
+    "shadow_enabled": true,
+    "shadow_intensity": 0.2
   },
-  
+
   "emotions": {
     "neutral": {
       "mouth_type": "line",
       "eye_openness": 1.0,
-      "brightness": 100
+      "eye_angle": 0,
+      "brightness": 100,
+      "color": [240, 200, 160],
+      "animation_speed": 1.0
     },
     "happy": {
       "mouth_type": "smile",
       "eye_openness": 1.0,
-      "brightness": 110
+      "eye_angle": 10,
+      "brightness": 110,
+      "color": [255, 220, 100],
+      "animation_speed": 1.0,
+      "add_sparkles": true,
+      "sparkle_count": 8
     },
     "sad": {
       "mouth_type": "frown",
       "eye_openness": 0.8,
-      "brightness": 80
+      "eye_angle": -10,
+      "brightness": 80,
+      "color": [180, 150, 200],
+      "animation_speed": 0.8,
+      "add_tears": true,
+      "tear_count": 2
     },
     "excited": {
       "mouth_type": "big_smile",
-      "eye_openness": 1.2,
-      "brightness": 120
+      "eye_openness": 1.3,
+      "eye_angle": 20,
+      "brightness": 120,
+      "color": [255, 200, 100],
+      "animation_speed": 1.3,
+      "add_sparkles": true,
+      "sparkle_count": 16,
+      "glow_intensity": 0.6
     },
     "confused": {
       "mouth_type": "question",
       "eye_openness": 0.9,
-      "brightness": 90
+      "eye_angle": -5,
+      "brightness": 90,
+      "color": [200, 150, 100],
+      "animation_speed": 1.0,
+      "head_tilt": 15
+    },
+    "angry": {
+      "mouth_type": "frown",
+      "eye_openness": 0.7,
+      "eye_angle": -15,
+      "brightness": 95,
+      "color": [220, 80, 80],
+      "animation_speed": 0.7,
+      "eyebrow_angle": 20
+    },
+    "thinking": {
+      "mouth_type": "hmm",
+      "eye_openness": 0.8,
+      "eye_angle": 45,
+      "brightness": 95,
+      "color": [150, 200, 255],
+      "animation_speed": 0.9,
+      "add_sparkles": false
+    },
+    "love": {
+      "mouth_type": "smile",
+      "eye_openness": 1.2,
+      "eye_angle": 30,
+      "brightness": 115,
+      "color": [255, 150, 200],
+      "animation_speed": 1.2,
+      "eye_shape": "heart",
+      "add_sparkles": true,
+      "sparkle_count": 12
+    },
+    "skeptical": {
+      "mouth_type": "neutral",
+      "eye_openness": 0.9,
+      "eye_angle": 0,
+      "brightness": 100,
+      "color": [200, 200, 150],
+      "animation_speed": 0.8,
+      "eyebrow_angle": -15
+    },
+    "sleeping": {
+      "mouth_type": "zzz",
+      "eye_openness": 0.0,
+      "eye_angle": 0,
+      "brightness": 50,
+      "color": [150, 150, 200],
+      "animation_speed": 0.5,
+      "eyes_closed": true,
+      "add_zzz": true
     }
   },
-  
+
   "mobile_app": {
-    "server_host": "192.168.1.101",
+    "enabled": true,
+    "server_host": "0.0.0.0",
     "server_port": 5000,
+    "websocket_enabled": true,
+    "websocket_path": "/socket.io",
+    "reconnection_enabled": true,
     "reconnection_attempts": 5,
-    "reconnection_delay": 1000,
-    "voice_recording_duration": 5000,
-    "voice_quality": "high"
+    "reconnection_delay_ms": 1000,
+    "voice_recording_duration_ms": 5000,
+    "voice_quality": "high",
+    "max_concurrent_connections": 10
   },
-  
+
   "ai_processing": {
     "emotion_detection_enabled": true,
     "voice_to_text_enabled": true,
     "text_to_speech_enabled": false,
     "llm_processing_enabled": false,
     "llm_model": "gpt-3.5-turbo",
-    "response_timeout": 10
+    "response_timeout": 10,
+    "cache_responses": true,
+    "cache_ttl_seconds": 300
   },
-  
+
   "logging": {
     "level": "INFO",
-    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    "file": "robot_server.log",
+    "format": "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s",
+    "file": "logs/robot_server.log",
+    "console_output": true,
     "max_bytes": 10485760,
-    "backup_count": 5
+    "backup_count": 5,
+    "log_requests": true,
+    "log_motor_commands": true,
+    "log_wifi_status": true
   },
-  
+
   "security": {
     "enable_authentication": false,
-    "secret_key": "change-this-in-production",
+    "secret_key": "your-secret-key-change-in-production",
     "cors_allowed_origins": ["*"],
+    "enable_https": false,
     "rate_limiting": {
       "enabled": false,
       "requests_per_minute": 60
-    }
+    },
+    "api_key_required": false
   },
-  
+
   "network": {
-    "interface": "eth0",
-    "dns_servers": ["8.8.8.8", "8.8.4.4"],
-    "static_ip": false,
-    "ip_address": "192.168.1.101",
+    "interface": "wlan0",
+    "static_ip_enabled": false,
+    "ip_address": "192.168.1.100",
     "netmask": "255.255.255.0",
-    "gateway": "192.168.1.1"
+    "gateway": "192.168.1.1",
+    "dns_servers": ["8.8.8.8", "8.8.4.4"],
+    "wifi_ssid": "your_ssid",
+    "wifi_password": "your_password",
+    "wifi_enabled": true,
+    "wifi_reconnect_enabled": true
   },
-  
+
   "performance": {
     "max_frame_buffer": 10,
     "video_compression": "jpeg",
+    "compression_quality": 80,
     "enable_hardware_acceleration": true,
     "thread_pool_size": 4,
-    "memory_limit_mb": 512
+    "memory_limit_mb": 512,
+    "cpu_throttle_enabled": false,
+    "cpu_throttle_threshold": 80
   },
-  
+
   "features": {
     "voice_control": true,
-    "gesture_control": true,
+    "gesture_control": false,
     "emotion_display": true,
     "text_display": true,
     "motor_feedback": true,
-    "audio_feedback": true,
-    "led_feedback": true,
+    "audio_feedback": false,
+    "led_feedback": false,
     "manual_mode": true,
-    "automatic_mode": true
+    "automatic_mode": false,
+    "remote_control": true,
+    "sensor_monitoring": true
   },
-  
+
   "safety": {
     "motor_timeout_seconds": 5,
     "emergency_stop_enabled": true,
+    "emergency_stop_button": 27,
     "max_motor_acceleration": 20,
     "min_motor_response_ms": 50,
-    "max_motor_response_ms": 500
+    "max_motor_response_ms": 500,
+    "speed_limit_percent": 100,
+    "temperature_monitoring": true,
+    "temperature_threshold_celsius": 75,
+    "voltage_monitoring": true,
+    "voltage_min_safe": 10.5,
+    "voltage_max_safe": 14.4
   },
-  
+
   "calibration": {
-    "motor_left_offset": 0,
-    "motor_right_offset": 0,
+    "motor_left_speed_offset": 0,
+    "motor_right_speed_offset": 0,
+    "motor_left_direction_invert": false,
+    "motor_right_direction_invert": false,
     "camera_brightness": 100,
     "camera_contrast": 50,
-    "led_brightness": 100
+    "camera_saturation": 100,
+    "camera_white_balance": "auto",
+    "display_gamma": 2.2,
+    "display_brightness_offset": 0
+  },
+
+  "wifi_esp12e": {
+    "ssid": "your_ssid",
+    "password": "your_password",
+    "hostname": "jetbot-esp12e",
+    "ap_mode_enabled": false,
+    "ap_ssid": "JetBot-AP",
+    "ap_password": "12345678"
+  },
+
+  "data_collection": {
+    "enabled": false,
+    "collect_telemetry": false,
+    "collect_sensor_data": false,
+    "telemetry_interval_seconds": 60,
+    "storage_path": "/data/telemetry",
+    "max_storage_mb": 1000
+  },
+
+  "development": {
+    "debug_mode": false,
+    "verbose_logging": false,
+    "test_mode": false,
+    "simulation_mode": false,
+    "enable_profiling": false,
+    "profiling_interval_seconds": 10
   }
 }
+
