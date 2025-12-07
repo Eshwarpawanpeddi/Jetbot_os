@@ -1,0 +1,85 @@
+{
+  "display": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "fullscreen": true,
+    "window_title": "AI Pet Robot - Face Display"
+  },
+  
+  "face": {
+    "size_ratio": 0.33,
+    "head_tilt_range": 0.2,
+    "animation_smoothing": 0.3
+  },
+  
+  "eyes": {
+    "distance_ratio": 0.5,
+    "vertical_position_ratio": -0.2,
+    "radius_ratio": 0.25,
+    "pupil_tracking_speed": 0.1,
+    "eye_color_brightness": 255
+  },
+  
+  "eyebrows": {
+    "vertical_offset": -0.15,
+    "width_ratio": 1.2,
+    "height_ratio": 0.3,
+    "animation_speed": 0.5
+  },
+  
+  "mouth": {
+    "vertical_position_ratio": 0.3,
+    "width_ratio": 0.8,
+    "height_ratio": 0.4,
+    "speech_sync_speed": 0.8
+  },
+  
+  "animations": {
+    "blink_rate": 17,
+    "blink_duration_ms": 100,
+    "emotion_transition_ms": 300,
+    "head_nod_frequency": 2.0,
+    "eye_sparkle_chance": 0.3
+  },
+  
+  "colors": {
+    "background_color": [240, 240, 240],
+    "text_color": [0, 0, 0],
+    "outline_width": 3,
+    "smooth_colors": true
+  },
+  
+  "performance": {
+    "use_gpu_acceleration": true,
+    "cache_shapes": true,
+    "adaptive_fps": true,
+    "max_cpu_usage_percent": 20
+  },
+  
+  "speech_sync": {
+    "mouth_shapes": [
+      "neutral",
+      "A",
+      "O",
+      "E",
+      "I"
+    ],
+    "mouth_shape_duration_ms": 50,
+    "smooth_mouth_transitions": true
+  },
+  
+  "accessibility": {
+    "high_contrast_mode": false,
+    "color_blind_friendly": false,
+    "large_features": false,
+    "simple_animations": false
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "log_emotions": true,
+    "log_performance": true,
+    "log_file": "face_renderer.log"
+  }
+}
