@@ -70,20 +70,6 @@
     "polling_interval_ms": 1000
   },
 
-  "jetson_nano": {
-    "enabled": true,
-    "display_mode": "local",
-    "camera_index": 0,
-    "camera_width": 640,
-    "camera_height": 480,
-    "camera_fps": 30,
-    "display_width": 1280,
-    "display_height": 720,
-    "display_fps": 30,
-    "video_codec": "H.264",
-    "video_quality": 80
-  },
-
   "display": {
     "mode": "face_animation",
     "width": 1280,
@@ -231,17 +217,6 @@
     "max_concurrent_connections": 10
   },
 
-  "ai_processing": {
-    "emotion_detection_enabled": true,
-    "voice_to_text_enabled": true,
-    "text_to_speech_enabled": false,
-    "llm_processing_enabled": false,
-    "llm_model": "gpt-3.5-turbo",
-    "response_timeout": 10,
-    "cache_responses": true,
-    "cache_ttl_seconds": 300
-  },
-
   "logging": {
     "level": "INFO",
     "format": "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s",
@@ -341,15 +316,6 @@
     "ap_password": "12345678"
   },
 
-  "data_collection": {
-    "enabled": false,
-    "collect_telemetry": false,
-    "collect_sensor_data": false,
-    "telemetry_interval_seconds": 60,
-    "storage_path": "/data/telemetry",
-    "max_storage_mb": 1000
-  },
-
   "development": {
     "debug_mode": false,
     "verbose_logging": false,
@@ -359,4 +325,3 @@
     "profiling_interval_seconds": 10
   }
 }
-

@@ -9,7 +9,7 @@ import requests
 import json
 import time
 import logging
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 from enum import Enum
 
 logging.basicConfig(level=logging.INFO)
@@ -45,6 +45,8 @@ class ESP12EController:
         self.base_url = f"http://{esp12e_ip}"
         self.timeout = timeout
         self.connected = False
+        self.retry_attempts = 3
+        self.retry_delay_ms = 1000
         
         # Motor parameters
         self.motor_speed = 255  # 0-255
@@ -68,9 +70,14 @@ class ESP12EController:
                 self.connected = True
                 logger.info(f"✓ Connected to ESP12E at {self.esp12e_ip}")
                 return True
+        except requests.exceptions.ConnectionError:
+            logger.error(f"✗ Connection error: ESP12E unreachable at {self.esp12e_ip}")
+        except requests.exceptions.Timeout:
+            logger.error(f"✗ Timeout: ESP12E not responding")
         except Exception as e:
             logger.error(f"✗ Connection failed: {e}")
-            self.connected = False
+        
+        self.connected = False
         return False
     
     def send_command(self, command: Dict) -> bool:
@@ -83,69 +90,91 @@ class ESP12EController:
         Returns:
             True if successful, False otherwise
         """
+        # Validate speed before sending
+        if 'speed' in command:
+            command['speed'] = min(255, max(0, int(command['speed'])))
+        
         if not self.connected:
             logger.warning("ESP12E not connected, attempting reconnection...")
             if not self.test_connection():
                 return False
         
-        try:
-            response = requests.post(
-                f"{self.base_url}/api/motor",
-                json=command,
-                timeout=self.timeout
-            )
-            
-            if response.status_code == 200:
-                logger.debug(f"Command sent: {command}")
-                return True
-            else:
-                logger.error(f"Command failed: {response.status_code}")
+        # Retry logic
+        for attempt in range(self.retry_attempts):
+            try:
+                response = requests.post(
+                    f"{self.base_url}/api/motor",
+                    json=command,
+                    timeout=self.timeout
+                )
+                
+                if response.status_code == 200:
+                    logger.debug(f"Command sent: {command}")
+                    return True
+                else:
+                    logger.error(f"Command failed with status {response.status_code}")
+                    
+            except requests.exceptions.ConnectionError:
+                logger.warning(f"Connection error on attempt {attempt + 1}")
+                if attempt < self.retry_attempts - 1:
+                    time.sleep(self.retry_delay_ms / 1000)
+                    if not self.test_connection():
+                        continue
                 return False
                 
-        except requests.exceptions.Timeout:
-            logger.error("Request timeout - ESP12E may be unresponsive")
-            self.connected = False
-            return False
-        except Exception as e:
-            logger.error(f"Command error: {e}")
-            return False
+            except requests.exceptions.Timeout:
+                logger.warning(f"Timeout on attempt {attempt + 1}")
+                if attempt < self.retry_attempts - 1:
+                    time.sleep(self.retry_delay_ms / 1000)
+                    continue
+                return False
+                
+            except Exception as e:
+                logger.error(f"Command error: {e}")
+                return False
+        
+        return False
     
     def move_forward(self, speed: int = 255) -> bool:
         """Move robot forward"""
+        speed = min(255, max(0, speed))
         command = {
             'action': 'motor',
             'direction': 'forward',
-            'speed': min(255, max(0, speed)),
-            'duration': 0  # 0 = continuous
+            'speed': speed,
+            'duration': 0
         }
         return self.send_command(command)
     
     def move_backward(self, speed: int = 255) -> bool:
         """Move robot backward"""
+        speed = min(255, max(0, speed))
         command = {
             'action': 'motor',
             'direction': 'backward',
-            'speed': min(255, max(0, speed)),
+            'speed': speed,
             'duration': 0
         }
         return self.send_command(command)
     
     def turn_left(self, speed: int = 200) -> bool:
         """Turn robot left"""
+        speed = min(255, max(0, speed))
         command = {
             'action': 'motor',
             'direction': 'left',
-            'speed': min(255, max(0, speed)),
+            'speed': speed,
             'duration': 0
         }
         return self.send_command(command)
     
     def turn_right(self, speed: int = 200) -> bool:
         """Turn robot right"""
+        speed = min(255, max(0, speed))
         command = {
             'action': 'motor',
             'direction': 'right',
-            'speed': min(255, max(0, speed)),
+            'speed': speed,
             'duration': 0
         }
         return self.send_command(command)
@@ -169,10 +198,11 @@ class ESP12EController:
             duration_ms: Duration in milliseconds
             speed: Motor speed (0-255)
         """
+        speed = min(255, max(0, speed))
         command = {
             'action': 'motor',
             'direction': direction,
-            'speed': min(255, max(0, speed)),
+            'speed': speed,
             'duration': duration_ms
         }
         return self.send_command(command)
@@ -260,4 +290,3 @@ if __name__ == "__main__":
         print(f"System Status: {json.dumps(status, indent=2)}")
     else:
         print("✗ Failed to connect to ESP12E")
-
