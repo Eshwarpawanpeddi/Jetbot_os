@@ -456,70 +456,64 @@ void handle_calibrate() {
  * Root endpoint
  */
 void handle_root() {
-  String html = R"(
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>JetBot ESP12E Motor Control</title>
-      <style>
-        body { font-family: Arial; margin: 20px; }
-        h1 { color: #333; }
-        .status { background: #f0f0f0; padding: 15px; border-radius: 5px; }
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
-        .stop { background: red; color: white; }
-        .forward { background: green; color: white; }
-      </style>
-    </head>
-    <body>
-      <h1>JetBot ESP12E Motor Control</h1>
-      <div class="status">
-        <p><strong>Status:</strong> <span id="status">Loading...</span></p>
-        <p><strong>Direction:</strong> <span id="direction">-</span></p>
-        <p><strong>Speed:</strong> <span id="speed">-</span></p>
-      </div>
-      
-      <h3>Controls</h3>
-      <button class="forward" onclick="send_command('forward', 200)">Forward</button>
-      <button class="forward" onclick="send_command('backward', 200)">Backward</button>
-      <button class="forward" onclick="send_command('left', 180)">Left</button>
-      <button class="forward" onclick="send_command('right', 180)">Right</button>
-      <button class="stop" onclick="send_command('stop', 0)">STOP</button>
-      
-      <h3>API Status</h3>
-      <p><a href="/status" target="_blank">GET /status</a></p>
-      <p><a href="/api/sensor/battery" target="_blank">GET /api/sensor/battery</a></p>
-      
-      <script>
-        function send_command(direction, speed) {
-          const data = { direction: direction, speed: speed };
-          fetch('/api/motor', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          })
-          .then(r => r.json())
-          .then(d => {
-            document.getElementById('direction').textContent = d.direction;
-            document.getElementById('speed').textContent = d.speed;
-          });
-        }
-        
-        function update_status() {
-          fetch('/status')
-            .then(r => r.json())
-            .then(d => {
-              document.getElementById('status').textContent = d.motors_running ? 'Running' : 'Stopped';
-              document.getElementById('direction').textContent = d.current_direction;
-              document.getElementById('speed').textContent = d.current_speed;
-            });
-        }
-        
-        setInterval(update_status, 1000);
-        update_status();
-      </script>
-    </body>
-    </html>
-  )";
+  String html = "";
+  html += "<!DOCTYPE html>";
+  html += "<html>";
+  html += "<head>";
+  html += "<title>JetBot ESP12E Motor Control</title>";
+  html += "<style>";
+  html += "body { font-family: Arial; margin: 20px; }";
+  html += "h1 { color: #333; }";
+  html += ".status { background: #f0f0f0; padding: 15px; border-radius: 5px; }";
+  html += "button { padding: 10px 20px; margin: 5px; cursor: pointer; }";
+  html += ".stop { background: red; color: white; }";
+  html += ".forward { background: green; color: white; }";
+  html += "</style>";
+  html += "</head>";
+  html += "<body>";
+  html += "<h1>JetBot ESP12E Motor Control</h1>";
+  html += "<div class=\"status\">";
+  html += "<p><strong>Status:</strong> <span id=\"status\">Loading...</span></p>";
+  html += "<p><strong>Direction:</strong> <span id=\"direction\">-</span></p>";
+  html += "<p><strong>Speed:</strong> <span id=\"speed\">-</span></p>";
+  html += "</div>";
+  html += "<h3>Controls</h3>";
+  html += "<button class=\"forward\" onclick=\"send_command('forward', 200)\">Forward</button>";
+  html += "<button class=\"forward\" onclick=\"send_command('backward', 200)\">Backward</button>";
+  html += "<button class=\"forward\" onclick=\"send_command('left', 180)\">Left</button>";
+  html += "<button class=\"forward\" onclick=\"send_command('right', 180)\">Right</button>";
+  html += "<button class=\"stop\" onclick=\"send_command('stop', 0)\">STOP</button>";
+  html += "<h3>API Status</h3>";
+  html += "<p><a href=\"/status\" target=\"_blank\">GET /status</a></p>";
+  html += "<p><a href=\"/api/sensor/battery\" target=\"_blank\">GET /api/sensor/battery</a></p>";
+  html += "<script>";
+  html += "function send_command(direction, speed) {";
+  html += "const data = { direction: direction, speed: speed };";
+  html += "fetch('/api/motor', {";
+  html += "method: 'POST',";
+  html += "headers: { 'Content-Type': 'application/json' },";
+  html += "body: JSON.stringify(data)";
+  html += "})";
+  html += ".then(r => r.json())";
+  html += ".then(d => {";
+  html += "document.getElementById('direction').textContent = d.direction;";
+  html += "document.getElementById('speed').textContent = d.speed;";
+  html += "});";
+  html += "}";
+  html += "function update_status() {";
+  html += "fetch('/status')";
+  html += ".then(r => r.json())";
+  html += ".then(d => {";
+  html += "document.getElementById('status').textContent = d.motors_running ? 'Running' : 'Stopped';";
+  html += "document.getElementById('direction').textContent = d.current_direction;";
+  html += "document.getElementById('speed').textContent = d.current_speed;";
+  html += "});";
+  html += "}";
+  html += "setInterval(update_status, 1000);";
+  html += "update_status();";
+  html += "</script>";
+  html += "</body>";
+  html += "</html>";
   
   server.send(200, "text/html", html);
   Serial.printf("[HTTP] GET / - 200 OK\n");
@@ -596,7 +590,7 @@ void setup() {
   }
   
   // mDNS
-  if (WiFi.mode() == WIFI_STA) {
+  if (WiFi.getMode() == WIFI_STA) {
     if (MDNS.begin(HOSTNAME)) {
       Serial.printf("[mDNS] ✓ Available at http://%s.local\n", HOSTNAME);
     }
@@ -635,7 +629,7 @@ void loop() {
   server.handleClient();
   
   // Update mDNS
-  if (WiFi.mode() == WIFI_STA) {
+  if (WiFi.getMode() == WIFI_STA) {
     MDNS.update();
   }
   
